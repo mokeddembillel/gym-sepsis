@@ -46,8 +46,8 @@ class SepsisEnv(gym.Env):
         self.outcome_model = keras.models.load_model(os.path.join(module_path, OUTCOME_MODEL))
         self.starting_states = np.load(os.path.join(module_path, STARTING_STATES_VALUES))['sepsis_starting_states']
         self.seed()
-        self.action_space = spaces.Discrete(24)
-
+        self.action_space = spaces.Discrete(NUM_ACTIONS)
+        # self.action_space.shape = (1,)
         # use a pixel to represent next state
         self.observation_space = spaces.Box(low=0, high=NUM_ACTIONS, shape=(NUM_FEATURES-2, 1, 1))
         self.reset(starting_state=starting_state)
@@ -95,6 +95,7 @@ class SepsisEnv(gym.Env):
         self.rewards.append(reward)
         self.dones.append(done)
         return self.s, reward, done, {"prob" : 1}
+        return None
 
     def reset(self, starting_state=None):
         self.rewards = []
@@ -112,6 +113,7 @@ class SepsisEnv(gym.Env):
         if self.verbose:
             print("starting state:", self.s)
         return self.s
+        return None
 
     def seed(self, seed=None):
         seed = seeding.np_random(seed)
